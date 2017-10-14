@@ -3,6 +3,7 @@ $(document).ready(function(){
 	getAllCategories();
 	getFeturedItems();
 	getRecomendedItems();
+	getRecomendedItemsDiv();
 });
 
 
@@ -51,13 +52,13 @@ function getFeturedItems(){
 				"isFeatured":true		
 	};
 	jQuery.ajax({
-        url: cartUrl+'/cart/filterItems',
+        url: cartUrl+'/cart/filterItems?page='+0+'&size='+12+'&sort=lupDate,desc'+'&sort=id,desc',
         type: 'POST',
 		data:JSON.stringify(reqData),
         contentType: 'application/json; charset=utf-8',
         success: function(resultData) {
 			$.each(resultData.content,function(index,value){
-					 $("[name='fetureDiv']").append($.parseHTML('<div class="col-sm-4"> <div class="product-image-wrapper"> <div class="single-products"> <div class="productinfo text-center"> <img src="'+cartUrl+'/cart/getImageByTitleId/'+value.id+'" alt="" /> <h2>Rs '+value.price+'</h2> <p>'+value.name+'</p> <a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a> </div> <div class="product-overlay"> <div class="overlay-content"> <h2>Rs '+value.price+'</h2> <p>'+value.name+'</p> <a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a> </div> </div> </div> <div class="choose">  </div> </div> </div>')
+					 $("[name='fetureDiv']").append($.parseHTML('<div class="col-sm-4"> <div class="product-image-wrapper"> <div class="single-products"> <div class="productinfo text-center"> <img src="'+cartUrl+'/cart/getImageByTitleId/'+value.id+'" alt="" /> <h2>Rs '+value.price+'</h2> <p>'+value.name+'</p> <a onclick="addToCart('+value.id+')" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a> </div> <div class="product-overlay"> <div class="overlay-content"> <h2>Rs '+value.price+'</h2> <p>'+value.name+'</p> <a onclick="addToCart('+value.id+')" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a> </div> </div> </div> <div class="choose">  </div> </div> </div>')
 					 	);
 				 
 			});
@@ -76,19 +77,42 @@ function getRecomendedItems(){
 				"isRecomended":true		
 	};
 	jQuery.ajax({
-        url: cartUrl+'/cart/filterItems',
+        url: cartUrl+'/cart/filterItems?page='+0+'&size='+3+'&sort=lupDate,desc'+'&sort=id,desc',
         type: 'POST',
 		data:JSON.stringify(reqData),
         contentType: 'application/json; charset=utf-8',
         success: function(resultData) {
+
 			$.each(resultData.content,function(index,value){
-					 $("[name='activeRecItemsDiv']").append($.parseHTML('<div class="col-sm-4"> <div class="product-image-wrapper"> <div class="single-products"> <div class="productinfo text-center"> <img src="'+cartUrl+'/cart/getImageByTitleId/'+value.id+'" alt="" /> <h2>Rs '+value.price+'</h2> <p>'+value.name+'</p> <a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a> </div> </div> </div> </div>'
+					 $("[name='activeRecItemsDiv']").append($.parseHTML('<div class="col-sm-4"> <div class="product-image-wrapper"> <div class="single-products"> <div class="productinfo text-center"> <img src="'+cartUrl+'/cart/getImageByTitleId/'+value.id+'" alt="" /> <h2>Rs '+value.price+'</h2> <p>'+value.name+'</p> <a onclick="addToCart('+value.id+')" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a> </div> </div> </div> </div>'
 					 	));
 				 
 			});
 
+        },
+        error : function(jqXHR, textStatus, errorThrown) {
+        //	alert(errorThrown);
+        },
+
+        timeout: 120000,
+    });
+}
+
+
+
+function getRecomendedItemsDiv(){
+	var reqData = { 
+				"isRecomended":true		
+	};
+	jQuery.ajax({
+        url: cartUrl+'/cart/filterItems?page='+1+'&size='+3+'&sort=lupDate,desc'+'&sort=id,desc',
+        type: 'POST',
+		data:JSON.stringify(reqData),
+        contentType: 'application/json; charset=utf-8',
+        success: function(resultData) {
+
 			$.each(resultData.content,function(index,value){
-					$("[name='recItemsDiv']").append($.parseHTML('<div class="col-sm-4"> <div class="product-image-wrapper"> <div class="single-products"> <div class="productinfo text-center"> <img src="'+cartUrl+'/cart/getImageByTitleId/'+value.id+'" alt="" /> <h2>Rs '+value.price+'</h2> <p>'+value.name+'</p> <a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a> </div> </div> </div> </div>'
+					$("[name='recItemsDiv']").append($.parseHTML('<div class="col-sm-4"> <div class="product-image-wrapper"> <div class="single-products"> <div class="productinfo text-center"> <img src="'+cartUrl+'/cart/getImageByTitleId/'+value.id+'" alt="" /> <h2>Rs '+value.price+'</h2> <p>'+value.name+'</p> <a onclick="addToCart('+value.id+')" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a> </div> </div> </div> </div>'
 					 	));
 				 
 			});
@@ -116,14 +140,14 @@ function getFeturedItemsList(page,size,divName){
         	$("[name="+divName+"] div").remove();
 
 			$.each(resultData.content,function(index,value){
-					$("[name="+divName+"]").append($.parseHTML('<div class="col-sm-4"> <div class="product-image-wrapper"> <div class="single-products"> <div class="productinfo text-center"> <img src="'+cartUrl+'/cart/getImageByTitleId/'+value.id+'" alt="" /> <h2>Rs '+value.price+'</h2> <p>'+value.name+'</p> <a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a> </div> <div class="product-overlay"> <div class="overlay-content"> <h2>Rs '+value.price+'</h2> <p>'+value.name+'</p> <a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a> </div> </div> </div> <div class="choose">  </div> </div> </div>')
+					$("[name="+divName+"]").append($.parseHTML('<div class="col-sm-4"> <div class="product-image-wrapper"> <div class="single-products"> <div class="productinfo text-center"> <img src="'+cartUrl+'/cart/getImageByTitleId/'+value.id+'" alt="" /> <h2>Rs '+value.price+'</h2> <p>'+value.name+'</p> <a onclick="addToCart('+value.id+')" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a> </div> <div class="product-overlay"> <div class="overlay-content"> <h2>Rs '+value.price+'</h2> <p>'+value.name+'</p> <a onclick="addToCart('+value.id+')" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a> </div> </div> </div> <div class="choose">  </div> </div> </div>')
 					 	);
 				 
 			});
 			
 			if(page==0){
 				var ulEl=document.getElementById("pagiUl");
-				ulEl.innerHTML="";
+				ulEl.innerHTML="";	
 				for(count = 0; count < resultData.totalPages; count++){
 					var node=document.createElement("LI");
 					if(count==0)
@@ -158,3 +182,35 @@ function changeclass(divName,eliment) {
 
 }
 
+function addToCart(itemId){
+	
+	var ebuy=getCookie('ebuy');
+
+	if(!ebuy){
+		alertify.error("Please login first");
+		return;
+	}
+
+	var dataArry = ebuy.split(';');
+
+	var reqData = { 
+		"itemId":itemId,
+		"customerId":dataArry[0][0]						
+	};
+	jQuery.ajax({
+        url: cartUrl+'/cart/addToCart',
+        type: 'POST',
+		data:JSON.stringify(reqData),
+        contentType: 'application/json; charset=utf-8',
+        success: function(data, textStatus, jqXHR) {
+
+        	alertify.success("Item added to cart");
+
+        },
+        error : function(jqXHR, textStatus, errorThrown) {
+	        alertify.error("Error occured during your process please retry");
+        },
+
+        timeout: 120000,
+    });
+}
