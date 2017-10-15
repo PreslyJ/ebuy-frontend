@@ -19,10 +19,10 @@ function registerCustomer(){
 		data:JSON.stringify(reqData),
         contentType: 'application/json; charset=utf-8',
         success: function(resultData) {
-        	//alert("successully registered");
+        	alertify.success("Registered successully");
         },
         error : function(jqXHR, textStatus, errorThrown) {
-        //	alert(errorThrown);
+	        alertify.error("Error occured during your process please retry");
         },
 
         timeout: 120000,
@@ -50,13 +50,40 @@ function loginCustomer(){
 		if(data)
 	        Set_Cookie('ebuy',data);//change as per ur needs
 
-        	//alert("successully registered");
+        	alertify.success("Login successully");
+
         },
         error : function(jqXHR, textStatus, errorThrown) {
-        	alert(textStatus);
-        	alert(jqXHR);
+	        alertify.error("Error occured during your process please retry");
         },
 
         timeout: 120000,
     });
 }
+
+function Set_Cookie( name, value)
+{
+	// set time, it's in milliseconds
+	var today = new Date();
+	today.setTime( today.getTime() );
+
+	document.cookie = name + "=" + value  ;
+
+}
+
+
+function getCookie(cname) {
+    var name = cname + "=";
+    var ca = document.cookie.split(';');
+    for(var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
+

@@ -27,9 +27,16 @@
 	<script src="js/jquery.scrollUp.min.js"></script>
 	<script src="js/price-range.js"></script>
     <script src="js/jquery.prettyPhoto.js"></script>
-    <script src="js/main.js"></script>
 	<script src="js/url.js"></script>
 	<script src="js/controller/cart.js"></script>
+	<script type="text/javascript">	
+		$(document).ready(function(){
+			getAllCategories();
+			getRecomendedItems();
+			getRecomendedItemsDiv();
+		});
+	</script>
+
 </head><!--/head-->
 
 <body>

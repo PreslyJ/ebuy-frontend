@@ -1,10 +1,11 @@
 
-$(document).ready(function(){
+/*$(document).ready(function(){
 	getAllCategories();
 	getFeturedItems();
 	getRecomendedItems();
 	getRecomendedItemsDiv();
-});
+	getCartItems();
+});*/
 
 
 
@@ -182,6 +183,23 @@ function changeclass(divName,eliment) {
 
 }
 
+function getCookie(cname) {
+    var name = cname + "=";
+    var ca = document.cookie.split(';');
+    for(var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
+
+
+
 function addToCart(itemId){
 	
 	var ebuy=getCookie('ebuy');
@@ -213,4 +231,46 @@ function addToCart(itemId){
 
         timeout: 120000,
     });
+}
+
+
+function getCartItems(){
+	
+	var ebuy=getCookie('ebuy');
+
+	if(!ebuy){
+		alertify.error("Please login first");
+		return;
+	}
+
+	var dataArry = ebuy.split(';');
+
+	var reqData = { 
+		"customerId":dataArry[0][0]						
+	};
+
+	jQuery.ajax({
+        url: cartUrl+'/cart/getCart',
+        type: 'POST',
+		data:JSON.stringify(reqData),
+        contentType: 'application/json; charset=utf-8',
+        success: function(resultData) {
+
+			$.each(resultData.cartItems,function(index,value){
+
+				$('#cartItems tr:last').after('<tr> <td class="cart_product"> <a href=""><img src="'+cartUrl+'/cart/getImgByTitleId/'+value.item.id+'?width='+110+'&height='+110+" alt=""></a> </td> <td class="cart_description"> <h4><a >'+value.item.name+'</a></h4>  </td> <td class="cart_price"> <p>'+value.item.price+'</p> </td> <td class="cart_quantity"> <div class="cart_quantity_button"> <a class="cart_quantity_up" href=""> + </a> <input class="cart_quantity_input" type="text" name="quantity" value="'+value.quantity+'" autocomplete="off" size="2"> <a class="cart_quantity_down" href=""> - </a> </div> </td> <td class="cart_total"> <p class="cart_total_price">'+value.totalPriceDouble +'</p> </td> <td class="cart_delete"> <a class="cart_quantity_delete" href=""><i class="fa fa-times"></i></a> </td> </tr>');
+				 
+			});
+
+			$('#subTotalSpan').value=resultData.grandTotal;
+
+        },
+        error : function(jqXHR, textStatus, errorThrown) {
+	        alertify.error("Error occured during your process please retry");
+        },
+
+        timeout: 120000,
+    });
+
+
 }
