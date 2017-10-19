@@ -9,7 +9,7 @@
 
 
 
-function getAllCategories(){
+function getAllCategories(isShopDiv){
 	jQuery.ajax({
 
 
@@ -30,8 +30,16 @@ function getAllCategories(){
 
 				 }	
 				 $.each(value.subCategories,function(indx,val){
-					var node=document.createElement("LI");
+
+					var node=document.createElement("A");
+					
+					if(isShopDiv)
+						node.href='javascript:getFeturedItemsList(0,12,"feturedDiv",'+val.id+')';
+					else
+						node.href='javascript:getFeturedItems('+val.id+')';
+
 					var textnode=document.createTextNode(val.name);
+
 				 	node.appendChild(textnode);
 				 	document.getElementById('catul'+index).appendChild(node); 
 				});
@@ -48,9 +56,17 @@ function getAllCategories(){
 }
 
 
-function getFeturedItems(){
+function getFeturedItems(subCategoryId){
+
+	var subcatId=0;
+
+	if(subCategoryId)
+		subcatId=subCategoryId;
+
 	var reqData = { 
-				"isFeatured":true		
+				"isFeatured":true,
+				"subCategoryId":subCategoryId		
+
 	};
 	jQuery.ajax({
         url: cartUrl+'/cart/filterItems?page='+0+'&size='+12+'&sort=lupDate,desc'+'&sort=id,desc',
@@ -127,9 +143,10 @@ function getRecomendedItemsDiv(){
     });
 }
 
-function getFeturedItemsList(page,size,divName){
+function getFeturedItemsList(page,size,divName,subCategoryId){
 	var reqData = { 
-				"isFeatured":true		
+				"isFeatured":true,
+				"subCategoryId":subCategoryId			
 	};
 	jQuery.ajax({
         url: cartUrl+'/cart/filterItems?page='+page+'&size='+size+'&sort=lupDate,desc'+'&sort=id,desc',
@@ -154,7 +171,10 @@ function getFeturedItemsList(page,size,divName){
 					if(count==0)
 						node.setAttribute('class','active');
 					var newA = document.createElement('a');
-					newA.setAttribute('onclick',"getFeturedItemsList("+count+",12,'feturedDiv');changeclass('mainFetDv',this);");
+					if(subCategoryId)
+						newA.setAttribute('onclick',"getFeturedItemsList("+count+",12,'feturedDiv',"+subCategoryId+");changeclass('mainFetDv',this);");
+					else
+						newA.setAttribute('onclick',"getFeturedItemsList("+count+",12,'feturedDiv');changeclass('mainFetDv',this);");
 					newA.setAttribute('href',"#");
 					newA.innerHTML = count+1;
 					node.appendChild(newA);
@@ -258,11 +278,11 @@ function getCartItems(){
 
 			$.each(resultData.cartItems,function(index,value){
 
-				$('#cartItems tr:last').after('<tr> <td class="cart_product"> <a href=""><img src="'+cartUrl+'/cart/getImgByTitleId/'+value.item.id+'?width='+110+'&height='+110+" alt=""></a> </td> <td class="cart_description"> <h4><a >'+value.item.name+'</a></h4>  </td> <td class="cart_price"> <p>'+value.item.price+'</p> </td> <td class="cart_quantity"> <div class="cart_quantity_button"> <a class="cart_quantity_up" href=""> + </a> <input class="cart_quantity_input" type="text" name="quantity" value="'+value.quantity+'" autocomplete="off" size="2"> <a class="cart_quantity_down" href=""> - </a> </div> </td> <td class="cart_total"> <p class="cart_total_price">'+value.totalPriceDouble +'</p> </td> <td class="cart_delete"> <a class="cart_quantity_delete" href=""><i class="fa fa-times"></i></a> </td> </tr>');
+				$('#cartItems tr:last').after('<tr> <td class="cart_product"> <a href=""><img src="'+cartUrl+'/cart/getImgByTitleId/'+value.item.id+'?width='+110+'&height='+110+'" alt=""></a> </td> <td class="cart_description"> <h4><a >'+value.item.name+'</a></h4>  </td> <td class="cart_price"> <p>Rs '+value.item.price+'</p> </td> <td class="cart_quantity"> <div class="cart_quantity_button"> <a class="cart_quantity_up" href=""> + </a> <input class="cart_quantity_input" type="text" disabled name="quantity" value="'+value.quantity+'" autocomplete="off" size="2"> <a class="cart_quantity_down" href=""> - </a> </div> </td> <td class="cart_total"> <p class="cart_total_price">Rs '+value.totalPriceDouble +'</p> </td> <td class="cart_delete"> <a class="cart_quantity_delete" onclick=removeFromCart('+value.id+')><i class="fa fa-times"></i></a> </td> </tr>');
 				 
 			});
 
-			$('#subTotalSpan').value=resultData.grandTotal;
+			$('#subTotalSpan').text('Rs '+resultData.grandTotal);
 
         },
         error : function(jqXHR, textStatus, errorThrown) {
@@ -271,6 +291,82 @@ function getCartItems(){
 
         timeout: 120000,
     });
+}
 
+
+function getCartItemsForChk(){
+	
+	var ebuy=getCookie('ebuy');
+
+	if(!ebuy){
+		alertify.error("Please login first");
+		return;
+	}
+
+	var dataArry = ebuy.split(';');
+
+	var reqData = { 
+		"customerId":dataArry[0][0]						
+	};
+
+	jQuery.ajax({
+        url: cartUrl+'/cart/getCart',
+        type: 'POST',
+		data:JSON.stringify(reqData),
+        contentType: 'application/json; charset=utf-8',
+        success: function(resultData) {
+
+			$.each(resultData.cartItems,function(index,value){
+
+				$('#cartItems tr').eq(-3).before('<tr> <td class="cart_product"> <a href=""><img src="'+cartUrl+'/cart/getImgByTitleId/'+value.item.id+'?width='+110+'&height='+110+'" alt=""></a> </td> <td class="cart_description"> <h4><a >'+value.item.name+'</a></h4>  </td> <td class="cart_price"> <p>Rs '+value.item.price+'</p> </td> <td class="cart_quantity"> <div class="cart_quantity_button"> <a class="cart_quantity_up" href=""> + </a> <input class="cart_quantity_input" type="text" disabled name="quantity" value="'+value.quantity+'" autocomplete="off" size="2"> <a class="cart_quantity_down" href=""> - </a> </div> </td> <td class="cart_total"> <p class="cart_total_price">Rs '+value.totalPriceDouble +'</p> </td> <td class="cart_delete"> <a class="cart_quantity_delete" onclick=removeFromCart('+value.id+')><i class="fa fa-times"></i></a> </td> </tr>');
+				 
+			});
+
+			$('#subTotalSpan').text('Rs '+resultData.grandTotal);
+			$('#totalSpan1').text('Rs '+resultData.grandTotal);
+
+        },
+        error : function(jqXHR, textStatus, errorThrown) {
+	        alertify.error("Error occured during your process please retry");
+        },
+
+        timeout: 120000,
+    });
+}
+
+
+
+function removeFromCart(id){
+
+	var ebuy=getCookie('ebuy');
+
+	if(!ebuy){
+		alertify.error("Please login first");
+		return;
+	}
+
+	var dataArry = ebuy.split(';');
+
+	var reqData = { 
+		"cartItemId":id,
+		"customerId":dataArry[0][0]	
+	};
+
+	jQuery.ajax({
+        url: cartUrl+'/cart/removeFromcart',
+        type: 'POST',
+		data:JSON.stringify(reqData),
+        contentType: 'application/json; charset=utf-8',
+        success: function(data, textStatus, jqXHR) {
+
+        	alertify.success("Item removed from cart");
+
+        },
+        error : function(jqXHR, textStatus, errorThrown) {
+	        alertify.error("Error occured during your process please retry");
+        },
+
+        timeout: 120000,
+    });
 
 }

@@ -22,12 +22,21 @@
     <link rel="apple-touch-icon-precomposed" sizes="114x114" href="images/ico/apple-touch-icon-114-precomposed.png">
     <link rel="apple-touch-icon-precomposed" sizes="72x72" href="images/ico/apple-touch-icon-72-precomposed.png">
     <link rel="apple-touch-icon-precomposed" href="images/ico/apple-touch-icon-57-precomposed.png">
+	<link rel = "stylesheet" href = "css/alertify.core.css" />
+    <link rel = "stylesheet" href = "css/alertify.default.css" id = "toggleCSS" />
+	  <style>
+	     .alertify-log-custom {
+	        background: blue;
+	     }
+	  </style>
+
+    <script src="js/alertify.min.js"></script>
     <script src="js/jquery.js"></script>
 	<script src="js/bootstrap.min.js"></script>
 	<script src="js/jquery.scrollUp.min.js"></script>
 	<script src="js/price-range.js"></script>
     <script src="js/jquery.prettyPhoto.js"></script>
-	<script src="js/url.js"></script>
+    <script src="js/url.js"></script>
 	<script src="js/controller/login.js"></script>
 </head><!--/head-->
 
@@ -124,13 +133,15 @@
 				<div class="col-sm-4 col-sm-offset-1">
 					<div class="login-form"><!--login form-->
 						<h2>Login to your account</h2>
-							<input id="logemail"  type="email" placeholder="Email Address" />
-							<input id="logpassword" type="password" placeholder="Password"/>
+							<form action="javascript:void()">
+								<input id="logemail"  type="email" placeholder="Email Address" />
+								<input id="logpassword" type="password" placeholder="Password"/>
 <!-- 							<span>
 								<input type="checkbox" class="checkbox"> 
 								Keep me signed in
 							</span>
  -->							<button  id="logbtn" onclick="loginCustomer()" class="btn btn-default">Login</button>
+ 							</form>
 					</div><!--/login form-->
 				</div>
 				<div class="col-sm-1">
@@ -139,7 +150,7 @@
 				<div class="col-sm-4">
 					<div class="signup-form"><!--sign up form-->
 						<h2>New User Signup!</h2>
-						<form >
+						<form  action="javascript:void()">
 							<input type="text" id="fname" placeholder="First Name"/>
 							<input type="text" id="lname" placeholder="Last Name"/>
 							<input type="text" id="phonenum" placeholder="Phone Number"/>
