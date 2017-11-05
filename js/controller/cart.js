@@ -34,7 +34,9 @@ function getAllCategories(isShopDiv){
 					if(val.status=='active'){
 
 						var node=document.createElement("A");
-						
+
+					 	var br = document.createElement("br");
+
 						if(isShopDiv)
 							node.href='javascript:getFeturedItemsList(0,12,"feturedDiv",'+val.id+')';
 						else
@@ -44,6 +46,8 @@ function getAllCategories(isShopDiv){
 
 					 	node.appendChild(textnode);
 					 	document.getElementById('catul'+index).appendChild(node); 
+
+						document.getElementById('catul'+index).appendChild(br);
 
 				 	}
 				});
@@ -169,7 +173,7 @@ function getFeturedItemsList(page,size,divName,subCategoryId){
         	$("[name="+divName+"] div").remove();
         	
 			$.each(resultData.content,function(index,value){
-					$("[name="+divName+"]").append($.parseHTML('<div class="col-sm-4"> <div class="product-image-wrapper"> <div class="single-products"> <div class="productinfo text-center"> <img src="'+cartUrl+'/cart/getImageByTitleId/'+value.id+'" alt="" /> <h2>Rs '+value.price+'</h2> <p>'+value.name+'</p> <a onclick="addToCart('+value.id+')" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a> </div> <div class="product-overlay"> <div class="overlay-content"> <h2>Rs '+value.price+'</h2> <p>'+value.name+'</p> <a onclick="addToCart('+value.id+')" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a> </div> </div> </div> <div class="choose">  </div> </div> </div>')
+					$("[name="+divName+"]").append($.parseHTML('<div class="col-sm-4"> <div class="product-image-wrapper"> <div class="single-products"> <div class="productinfo text-center"> <img src="'+cartUrl+'/cart/getImageByTitleId/'+value.id+'" alt="" /> <h2>Rs '+value.price+'</h2> <p>'+value.name+'</p> <a onclick="addToCart('+value.id+')" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a> </div> <div class="product-overlay"> <div class="overlay-content"> <h2>Rs '+value.price+'</h2> <p>'+value.name+'</p> <a onclick="addToCart('+value.id+')" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a> </div> </div> </div>  <div class="choose"> <ul class="nav nav-pills nav-justified"> <li><a href="product-details.html?id='+value.id+'"><i class="fa fa-plus-square"></i>Item Details</a></li></ul> </div> </div> </div>')
 					 	);
 				 
 			});
