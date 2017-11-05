@@ -31,9 +31,11 @@
 	<script src="js/controller/cart.js"></script>
 	<script type="text/javascript">	
 		$(document).ready(function(){
-			getAllCategories();
-			getRecomendedItems();
+			getAllCategories(true);
+			getFeturedItemsList(0,12,"feturedDiv");
+/*			getRecomendedItems();
 			getRecomendedItemsDiv();
+*/
 		});
 	</script>
 
@@ -148,10 +150,6 @@
 				
 				<div class="col-sm-9 padding-right" name="mainFetDv">
 					<div class="features_items" name="feturedDiv"><!--features_items-->
-						<script type="text/javascript">
-							getFeturedItemsList(0,12,"feturedDiv");
-
-						</script>
 
 						<h2 class="title text-center">Features Items</h2>
 

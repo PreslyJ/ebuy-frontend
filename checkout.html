@@ -38,12 +38,56 @@
     <script src="js/jquery.prettyPhoto.js"></script>
     <script src="js/url.js"></script>
 	<script src="js/controller/cart.js"></script>
-
 	<script type="text/javascript">	
 		$(document).ready(function(){
 			getCartItemsForChk();
 		});
 	</script>
+
+<!-- 	<script src="js/util/checkout.js"></script> -->
+	<script src=https://www.paypalobjects.com/api/checkout.js></script>
+
+	<script>
+        paypal.Button.render({
+
+            env: 'sandbox', // Or 'production',
+
+  			client: {
+
+                // Set up the payment here
+ 				sandbox:    'AdmtUO_tK27JEj8p8OZZm3ZsC8XwOKcpxejLJ-PqLKUJRzku-WMF17XGYjf8DCVdXROPg5vd2kuo3eko',
+            	production: 'AfQP0vnhklAZ_RB_75fdpUssRS6tw6WqSTk-TdLnTwpzkSR1d0ctYD_bZJuHoej56cNe0vofE9gRpkuv'
+
+        	},
+
+            payment: function() {
+
+				return actions.payment.create({
+		                payment: {
+		                    transactions: [
+		                        {
+		                            amount: { total: '1.00', currency: 'SLR' }
+		                        }
+		                    ]
+		                }
+		            });
+
+
+
+            },
+
+            commit: true, // Show a 'Pay Now' button
+
+            onAuthorize: function(data, actions) {
+	             return actions.payment.execute().then(function(payment) {
+
+	                // The payment is complete!
+	                // You can now show a confirmation message to the customer
+	            });
+           }
+
+        }, '#paypal-button');
+    </script>
 
 </head><!--/head-->
 
@@ -119,7 +163,6 @@
 								<li class="dropdown"><a href="#">Shop<i class="fa fa-angle-down"></i></a>
                                     <ul role="menu" class="sub-menu">
                                         <li><a href="shop.html">Products</a></li>
-										<li><a href="product-details.html">Product Details</a></li> 
 										<li><a href="checkout.html">Checkout</a></li> 
 										<li><a href="cart.html">Cart</a></li> 
 										<li><a href="login.html">Login</a></li> 
@@ -180,14 +223,14 @@
 				</table>
 			</div>
 			<div class="payment-options">
-					<span>
+					<!-- <span>
 						<label><input type="checkbox"> Direct Bank Transfer</label>
 					</span>
 					<span>
 						<label><input type="checkbox"> Check Payment</label>
-					</span>
+					</span> -->
 					<span>
-						<label><input type="checkbox"> Paypal</label>
+						<div id="paypal-button"></div>
 					</span>
 				</div>
 		</div>

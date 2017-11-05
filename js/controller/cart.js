@@ -10,12 +10,13 @@
 
 
 function getAllCategories(isShopDiv){
+	var reqData = { 
+				"status":"active"
+	};
 	jQuery.ajax({
-
-
         url: cartUrl+'/cart/getAllCategories',
+        data:JSON.stringify(reqData),
         type: 'POST',
-
         contentType: 'application/json; charset=utf-8',
         success: function(resultData) {
 			$.each(resultData.content,function(index,value){
@@ -29,19 +30,22 @@ function getAllCategories(isShopDiv){
 					 	);
 
 				 }	
-				 $.each(value.subCategories,function(indx,val){
+				 $.each(value.subCategories,function(indx,val){					
+					if(val.status=='active'){
 
-					var node=document.createElement("A");
-					
-					if(isShopDiv)
-						node.href='javascript:getFeturedItemsList(0,12,"feturedDiv",'+val.id+')';
-					else
-						node.href='javascript:getFeturedItems('+val.id+')';
+						var node=document.createElement("A");
+						
+						if(isShopDiv)
+							node.href='javascript:getFeturedItemsList(0,12,"feturedDiv",'+val.id+')';
+						else
+							node.href='javascript:getFeturedItems('+val.id+')';
 
-					var textnode=document.createTextNode(val.name);
+						var textnode=document.createTextNode(val.name);
 
-				 	node.appendChild(textnode);
-				 	document.getElementById('catul'+index).appendChild(node); 
+					 	node.appendChild(textnode);
+					 	document.getElementById('catul'+index).appendChild(node); 
+
+				 	}
 				});
 				 
 			});
@@ -65,7 +69,8 @@ function getFeturedItems(subCategoryId){
 
 	var reqData = { 
 				"isFeatured":true,
-				"subCategoryId":subCategoryId		
+				"subCategoryId":subCategoryId,
+				"status":"active"		
 
 	};
 	jQuery.ajax({
@@ -74,8 +79,11 @@ function getFeturedItems(subCategoryId){
 		data:JSON.stringify(reqData),
         contentType: 'application/json; charset=utf-8',
         success: function(resultData) {
+
+        	$("[name=fetureDiv] div").remove();
+			
 			$.each(resultData.content,function(index,value){
-					 $("[name='fetureDiv']").append($.parseHTML('<div class="col-sm-4"> <div class="product-image-wrapper"> <div class="single-products"> <div class="productinfo text-center"> <img src="'+cartUrl+'/cart/getImageByTitleId/'+value.id+'" alt="" /> <h2>Rs '+value.price+'</h2> <p>'+value.name+'</p> <a onclick="addToCart('+value.id+')" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a> </div> <div class="product-overlay"> <div class="overlay-content"> <h2>Rs '+value.price+'</h2> <p>'+value.name+'</p> <a onclick="addToCart('+value.id+')" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a> </div> </div> </div> <div class="choose">  </div> </div> </div>')
+					 $("[name='fetureDiv']").append($.parseHTML('<div class="col-sm-4"> <div class="product-image-wrapper"> <div class="single-products"> <div class="productinfo text-center"> <img src="'+cartUrl+'/cart/getImageByTitleId/'+value.id+'" alt="" /> <h2>Rs '+value.price+'</h2> <p>'+value.name+'</p> <a onclick="addToCart('+value.id+')" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a> </div> <div class="product-overlay"> <div class="overlay-content"> <h2>Rs '+value.price+'</h2> <p>'+value.name+'</p> <a onclick="addToCart('+value.id+')" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a> </div> </div> </div> <div class="choose"> <ul class="nav nav-pills nav-justified"> <li><a href="product-details.html?id='+value.id+'"><i class="fa fa-plus-square"></i>Item Details</a></li></ul> </div> </div> </div>')
 					 	);
 				 
 			});
@@ -91,7 +99,8 @@ function getFeturedItems(subCategoryId){
 
 function getRecomendedItems(){
 	var reqData = { 
-				"isRecomended":true		
+				"isRecomended":true,
+				"status":"active"		
 	};
 	jQuery.ajax({
         url: cartUrl+'/cart/filterItems?page='+0+'&size='+3+'&sort=lupDate,desc'+'&sort=id,desc',
@@ -101,7 +110,7 @@ function getRecomendedItems(){
         success: function(resultData) {
 
 			$.each(resultData.content,function(index,value){
-					 $("[name='activeRecItemsDiv']").append($.parseHTML('<div class="col-sm-4"> <div class="product-image-wrapper"> <div class="single-products"> <div class="productinfo text-center"> <img src="'+cartUrl+'/cart/getImageByTitleId/'+value.id+'" alt="" /> <h2>Rs '+value.price+'</h2> <p>'+value.name+'</p> <a onclick="addToCart('+value.id+')" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a> </div> </div> </div> </div>'
+					 $("[name='activeRecItemsDiv']").append($.parseHTML('<div class="col-sm-4"> <div class="product-image-wrapper"> <div class="single-products"> <div class="productinfo text-center"> <img src="'+cartUrl+'/cart/getImageByTitleId/'+value.id+'" alt="" /> <h2>Rs '+value.price+'</h2> <p>'+value.name+'</p> <a onclick="addToCart('+value.id+')" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a> </div> </div><div class="choose"> <ul class="nav nav-pills nav-justified"> <li><a href="product-details.html?id='+value.id+'"><i class="fa fa-plus-square"></i>Item Details</a></li></ul> </div> </div> </div>'
 					 	));
 				 
 			});
@@ -119,7 +128,8 @@ function getRecomendedItems(){
 
 function getRecomendedItemsDiv(){
 	var reqData = { 
-				"isRecomended":true		
+				"isRecomended":true,
+				"status":"active"		
 	};
 	jQuery.ajax({
         url: cartUrl+'/cart/filterItems?page='+1+'&size='+3+'&sort=lupDate,desc'+'&sort=id,desc',
@@ -129,7 +139,7 @@ function getRecomendedItemsDiv(){
         success: function(resultData) {
 
 			$.each(resultData.content,function(index,value){
-					$("[name='recItemsDiv']").append($.parseHTML('<div class="col-sm-4"> <div class="product-image-wrapper"> <div class="single-products"> <div class="productinfo text-center"> <img src="'+cartUrl+'/cart/getImageByTitleId/'+value.id+'" alt="" /> <h2>Rs '+value.price+'</h2> <p>'+value.name+'</p> <a onclick="addToCart('+value.id+')" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a> </div> </div> </div> </div>'
+					$("[name='recItemsDiv']").append($.parseHTML('<div class="col-sm-4"> <div class="product-image-wrapper"> <div class="single-products"> <div class="productinfo text-center"> <img src="'+cartUrl+'/cart/getImageByTitleId/'+value.id+'" alt="" /> <h2>Rs '+value.price+'</h2> <p>'+value.name+'</p> <a onclick="addToCart('+value.id+')" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a> </div> </div><div class="choose"> <ul class="nav nav-pills nav-justified"> <li><a href="product-details.html?id='+value.id+'"><i class="fa fa-plus-square"></i>Item Details</a></li></ul> </div> </div> </div>'
 					 	));
 				 
 			});
@@ -146,7 +156,8 @@ function getRecomendedItemsDiv(){
 function getFeturedItemsList(page,size,divName,subCategoryId){
 	var reqData = { 
 				"isFeatured":true,
-				"subCategoryId":subCategoryId			
+				"subCategoryId":subCategoryId,
+				"status":"active"			
 	};
 	jQuery.ajax({
         url: cartUrl+'/cart/filterItems?page='+page+'&size='+size+'&sort=lupDate,desc'+'&sort=id,desc',
@@ -156,7 +167,7 @@ function getFeturedItemsList(page,size,divName,subCategoryId){
         success: function(resultData) {
 
         	$("[name="+divName+"] div").remove();
-
+        	
 			$.each(resultData.content,function(index,value){
 					$("[name="+divName+"]").append($.parseHTML('<div class="col-sm-4"> <div class="product-image-wrapper"> <div class="single-products"> <div class="productinfo text-center"> <img src="'+cartUrl+'/cart/getImageByTitleId/'+value.id+'" alt="" /> <h2>Rs '+value.price+'</h2> <p>'+value.name+'</p> <a onclick="addToCart('+value.id+')" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a> </div> <div class="product-overlay"> <div class="overlay-content"> <h2>Rs '+value.price+'</h2> <p>'+value.name+'</p> <a onclick="addToCart('+value.id+')" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a> </div> </div> </div> <div class="choose">  </div> </div> </div>')
 					 	);
@@ -266,7 +277,8 @@ function getCartItems(){
 	var dataArry = ebuy.split(';');
 
 	var reqData = { 
-		"customerId":dataArry[0][0]						
+		"customerId":dataArry[0][0],
+		"status":"active"						
 	};
 
 	jQuery.ajax({
@@ -306,7 +318,8 @@ function getCartItemsForChk(){
 	var dataArry = ebuy.split(';');
 
 	var reqData = { 
-		"customerId":dataArry[0][0]						
+		"customerId":dataArry[0][0],
+		"status":"active"						
 	};
 
 	jQuery.ajax({
