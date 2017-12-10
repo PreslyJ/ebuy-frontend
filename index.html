@@ -47,6 +47,25 @@
 			getRecomendedItems();
 			getRecomendedItemsDiv();
 		});
+
+		$(document).ready(function(){
+
+				jQuery.ajax({
+			        url: cartUrl+'/dashboard/saveSiteView',
+			        type: 'GET',
+			        success: function(resultData) {
+
+
+			        },
+			        error : function(jqXHR, textStatus, errorThrown) {
+			        //	alert(errorThrown);
+			        },
+
+			        timeout: 120000,
+			    });
+		});
+
+
 	</script>
 </head><!--/head-->
 

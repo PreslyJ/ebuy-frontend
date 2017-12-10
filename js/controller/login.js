@@ -84,8 +84,13 @@ function registerCustomer(){
         success: function(resultData) {
         	alertify.success("Registered successully");
         },
-        error : function(jqXHR, textStatus, errorThrown) {
-	        alertify.error("Error occured during your process please retry");
+        error : function(jqXHR, textStatus, errorThrown,responseJSON) {
+    
+            if(jqXHR.responseJSON.message=='email.inuse')
+                $('#emailDiv').append($.parseHTML('<text style="color:#D8000C;" >email already in use</text>'));
+            else
+    	        alertify.error("Error occured during your process please retry");
+    
         },
 
         timeout: 120000,
