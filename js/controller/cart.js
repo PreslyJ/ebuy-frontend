@@ -341,6 +341,8 @@ function getCartItemsForChk(){
 
 			$('#subTotalSpan').text('Rs '+resultData.grandTotal);
 			$('#totalSpan1').text('Rs '+resultData.grandTotal);
+			$('#totVal').val(resultData.grandTotal);
+
 
         },
         error : function(jqXHR, textStatus, errorThrown) {
@@ -387,3 +389,44 @@ function removeFromCart(id){
     });
 
 }
+
+function purchase(){
+
+	if($('#totVal').val()<1)
+		return;
+
+	var ebuy=getCookie('ebuy');
+
+	if(!ebuy){
+		alertify.error("Please login first");
+		return;
+	}
+
+	if(!confirm('Please confirm purchase'))
+		return;
+
+	var dataArry = ebuy.split(';');
+
+	var reqData = { 
+		"customerId":dataArry[0][0]	
+	};
+
+	jQuery.ajax({
+        url: cartUrl+'/cart/purchaseItems',
+        type: 'POST',
+		data:JSON.stringify(reqData),
+        contentType: 'application/json; charset=utf-8',
+        success: function(data, textStatus, jqXHR) {
+
+        	alert("Purchase successfull");
+
+        },
+        error : function(jqXHR, textStatus, errorThrown) {
+	        alertify.error("Error occured during your process please retry");
+        },
+
+        timeout: 120000,
+    });
+
+}
+

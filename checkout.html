@@ -47,7 +47,7 @@
 <!-- 	<script src="js/util/checkout.js"></script> -->
 	<script src=https://www.paypalobjects.com/api/checkout.js></script>
 
-	<script>
+	<!-- <script>
         paypal.Button.render({
 
             env: 'sandbox', // Or 'production',
@@ -81,14 +81,102 @@
             onAuthorize: function(data, actions) {
 	             return actions.payment.execute().then(function(payment) {
 
-	             		
+						alert("ok");	             		
 	                // The payment is complete!
 	                // You can now show a confirmation message to the customer
 	            });
            }
 
         }, '#paypal-button');
-    </script>
+    </script> -->
+<!-- <script>
+    paypal.Button.render({
+      env: 'sandbox', // Or 'sandbox',
+
+      commit: true, // Show a 'Pay Now' button
+
+      style: {
+        color: 'gold',
+        size: 'small'
+      },
+
+      payment: function(data, actions) {
+      	// alert("da");
+
+      	if(!confirm('Sure you want to continue?'))
+      		return;
+      	else{
+
+      		alert('complete');
+
+			return;
+      	}
+        /* 
+         * Set up the payment here 
+         */
+      },
+
+      onAuthorize: function(data, actions) {
+
+      	alert("auth");
+
+        /* 
+         * Execute the payment here 
+         */
+      },
+
+      onCancel: function(data, actions) {
+
+      	alert("can");
+
+        /* 
+         * Buyer cancelled the payment 
+         */
+      },
+
+      onError: function(err) {
+      	      	alert("error");
+        /* 
+         * An error occurred during the transaction 
+         */
+      }
+    }, '#paypal-button');
+  </script> -->
+
+<script>
+    paypal.Button.render({
+
+        env: 'production', // Or 'sandbox'
+
+        client: {
+			sandbox:    'AdmtUO_tK27JEj8p8OZZm3ZsC8XwOKcpxejLJ-PqLKUJRzku-WMF17XGYjf8DCVdXROPg5vd2kuo3eko',
+            	production: 'AfQP0vnhklAZ_RB_75fdpUssRS6tw6WqSTk-TdLnTwpzkSR1d0ctYD_bZJuHoej56cNe0vofE9gRpkuv'
+        },
+
+        commit: true, // Show a 'Pay Now' button
+
+        payment: function(data, actions) {
+            return actions.payment.create({
+                payment: {
+                    transactions: [
+                        {
+                            amount: { total: '1.00', currency: 'USD' }
+                        }
+                    ]
+                }
+            });
+        },
+
+        onAuthorize: function(data, actions) {
+            return actions.payment.execute().then(function(payment) {
+
+                // The payment is complete!
+                // You can now show a confirmation message to the customer
+            });
+        }
+
+    }, '#paypal-button');
+</script>
 
 </head><!--/head-->
 
@@ -217,6 +305,7 @@
 										<td>Total</td>
 										<td><span id="totalSpan1">Rs 0</span></td>
 									</tr>
+									<input type="hidden" id="totVal" value="0">
 								</table>
 							</td>
 						</tr>
@@ -231,8 +320,17 @@
 						<label><input type="checkbox"> Check Payment</label>
 					</span> -->
 					<span>
-						<div id="paypal-button"></div>
+						<table>
+							<tr>
+								<td><div id="paypal-button" ></div></td>
+								<td>&nbsp;</td>
+								<td>&nbsp;</td>
+								<td><div> <button type="button" onclick="purchase()" >Pay</button></div></td>
+							</tr>
+						</table>
 					</span>
+				
+				
 				</div>
 		</div>
 	</section> <!--/#cart_items-->
