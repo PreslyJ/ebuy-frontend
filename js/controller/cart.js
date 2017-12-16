@@ -396,7 +396,7 @@ function removeFromCart(id,cart){
 function logout(){
 	 document.cookie =  'ebuy=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
 	 alertify.success("log out success");
-	 window.location.href = 'index.html';
+	 setTimeout(function(){ window.location.href = 'index.html'},500);
 }
 
 
@@ -442,3 +442,7 @@ function purchase(){
 
 }
 
+function addTocart1(){
+    var iid=$('#itId').val();
+    addTocart(iid);
+}
