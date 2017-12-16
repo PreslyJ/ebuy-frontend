@@ -244,11 +244,11 @@ function addToCart(itemId){
 		return;
 	}
 
-	var dataArry = ebuy.split(';');
+	var dataArry = ebuy.split(':');
 
 	var reqData = { 
 		"itemId":itemId,
-		"customerId":dataArry[0][0]						
+		"customerId":dataArry[0]						
 	};
 	jQuery.ajax({
         url: cartUrl+'/cart/addToCart',
@@ -278,10 +278,10 @@ function getCartItems(){
 		return;
 	}
 
-	var dataArry = ebuy.split(';');
+	var dataArry = ebuy.split(':');
 
 	var reqData = { 
-		"customerId":dataArry[0][0],
+		"customerId":dataArry[0],
 		"status":"active"						
 	};
 
@@ -319,10 +319,10 @@ function getCartItemsForChk(){
 		return;
 	}
 
-	var dataArry = ebuy.split(';');
+	var dataArry = ebuy.split(':');
 
 	var reqData = { 
-		"customerId":dataArry[0][0],
+		"customerId":dataArry[0],
 		"status":"active"						
 	};
 
@@ -364,11 +364,11 @@ function removeFromCart(id){
 		return;
 	}
 
-	var dataArry = ebuy.split(';');
+	var dataArry = ebuy.split(':');
 
 	var reqData = { 
 		"cartItemId":id,
-		"customerId":dataArry[0][0]	
+		"customerId":dataArry[0]
 	};
 
 	jQuery.ajax({
@@ -390,10 +390,19 @@ function removeFromCart(id){
 
 }
 
+function logout(){
+	 document.cookie =  'ebuy=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+	 alertify.success("log out success");
+	 window.location.href = 'index.html';
+}
+
+
 function purchase(){
 
-	if($('#totVal').val()<1)
+	if($('#totVal').val()<1){
+		alertify.error("No items in cart");
 		return;
+	}
 
 	var ebuy=getCookie('ebuy');
 
@@ -405,10 +414,10 @@ function purchase(){
 	if(!confirm('Please confirm purchase'))
 		return;
 
-	var dataArry = ebuy.split(';');
+	var dataArry = ebuy.split(':');
 
 	var reqData = { 
-		"customerId":dataArry[0][0]	
+		"customerId":dataArry[0]	
 	};
 
 	jQuery.ajax({

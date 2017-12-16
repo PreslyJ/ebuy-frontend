@@ -141,9 +141,10 @@ function loginCustomer(){
         
 
 		if(data){
-	        Set_Cookie('ebuy',data);//change as per ur needs
-
+	        Set_Cookie('ebuy',data);//change as per ur needs            
         	alertify.success("Login successully");
+            setTimeout(function(){window.location.href = 'index.html'},500);
+            
          }else{   
           
             $('#pwDiv').append($.parseHTML('<text style="color:#D8000C;" >Username or password doesn\'t match </text>'));
