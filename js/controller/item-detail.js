@@ -41,15 +41,52 @@ function getItemById(){
             $('#name').html(data.name);            
             $('#itemId').html(data.id);            
             $('#price').html(data.price);         
-            $('#quantity').value=data.quantity;         
+            $('#quantity').val(data.quantity);         
             $('#lowLimit').html(data.minAge);         
-            $('#maxLimit').html(data.maxAge);         
+            $('#maxLimit').html(data.maxAge);    
+            $('#itId').val(data.id);            
 
             $('#viewItem').append('<img src="'+cartUrl+'/cart/getImageByTitleId/'+data.id+'" alt="" />');
 
         },
         error : function(jqXHR, textStatus, errorThrown) {
             console.log(errorThrown);
+        },
+
+        timeout: 120000,
+    });
+
+
+}
+
+function submitReview(){
+
+    var ebuy=getCookie('ebuy');
+
+    if(!ebuy){
+        alertify.error("Please login first");
+        return;
+    }
+
+    var dataArry = ebuy.split(':');
+
+    var reqData = { 
+        "itemId": $('#itId').val(),
+        "customerId":dataArry[0],
+        "review": $('#ReviewStr').val()                       
+    };
+    jQuery.ajax({
+        url: cartUrl+'/cart/saveReview',
+        type: 'POST',
+        data:JSON.stringify(reqData),
+        contentType: 'application/json; charset=utf-8',
+        success: function(data, textStatus, jqXHR) {
+
+            alertify.success("review submit successfull");
+
+        },
+        error : function(jqXHR, textStatus, errorThrown) {
+            alertify.error("Error occured during your process please retry");
         },
 
         timeout: 120000,

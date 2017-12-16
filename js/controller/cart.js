@@ -294,7 +294,7 @@ function getCartItems(){
 
 			$.each(resultData.cartItems,function(index,value){
 
-				$('#cartItems tr:last').after('<tr> <td class="cart_product"> <a href=""><img src="'+cartUrl+'/cart/getImgByTitleId/'+value.item.id+'?width='+110+'&height='+110+'" alt=""></a> </td> <td class="cart_description"> <h4><a >'+value.item.name+'</a></h4>  </td> <td class="cart_price"> <p>Rs '+value.item.price+'</p> </td> <td class="cart_quantity"> <div class="cart_quantity_button"> <a class="cart_quantity_up" href=""> + </a> <input class="cart_quantity_input" type="text" disabled name="quantity" value="'+value.quantity+'" autocomplete="off" size="2"> <a class="cart_quantity_down" href=""> - </a> </div> </td> <td class="cart_total"> <p class="cart_total_price">Rs '+value.totalPriceDouble +'</p> </td> <td class="cart_delete"> <a class="cart_quantity_delete" onclick=removeFromCart('+value.id+')><i class="fa fa-times"></i></a> </td> </tr>');
+				$('#cartItems tr:last').after('<tr> <td class="cart_product"> <a href=""><img src="'+cartUrl+'/cart/getImgByTitleId/'+value.item.id+'?width='+110+'&height='+110+'" alt=""></a> </td> <td class="cart_description"> <h4><a >'+value.item.name+'</a></h4>  </td> <td class="cart_price"> <p>Rs '+value.item.price+'</p> </td> <td class="cart_quantity"> <div class="cart_quantity_button"> <input class="cart_quantity_input" type="text" disabled name="quantity" value="'+value.quantity+'" autocomplete="off" size="2"> </div> </td> <td class="cart_total"> <p class="cart_total_price">Rs '+value.totalPriceDouble +'</p> </td> <td class="cart_delete"> <a class="cart_quantity_delete" onclick=removeFromCart('+value.id+',true)><i class="fa fa-times"></i></a> </td> </tr>');
 				 
 			});
 
@@ -334,8 +334,8 @@ function getCartItemsForChk(){
         success: function(resultData) {
 
 			$.each(resultData.cartItems,function(index,value){
-
-				$('#cartItems tr').eq(-3).before('<tr> <td class="cart_product"> <a href=""><img src="'+cartUrl+'/cart/getImgByTitleId/'+value.item.id+'?width='+110+'&height='+110+'" alt=""></a> </td> <td class="cart_description"> <h4><a >'+value.item.name+'</a></h4>  </td> <td class="cart_price"> <p>Rs '+value.item.price+'</p> </td> <td class="cart_quantity"> <div class="cart_quantity_button"> <a class="cart_quantity_up" href=""> + </a> <input class="cart_quantity_input" type="text" disabled name="quantity" value="'+value.quantity+'" autocomplete="off" size="2"> <a class="cart_quantity_down" href=""> - </a> </div> </td> <td class="cart_total"> <p class="cart_total_price">Rs '+value.totalPriceDouble +'</p> </td> <td class="cart_delete"> <a class="cart_quantity_delete" onclick=removeFromCart('+value.id+')><i class="fa fa-times"></i></a> </td> </tr>');
+				/*<div class="cart_quantity_button"> <a class="cart_quantity_up" href=""> + </a><a class="cart_quantity_down" href=""> - </a>*/
+				$('#cartItems tr').eq(-3).before('<tr> <td class="cart_product"> <a href=""><img src="'+cartUrl+'/cart/getImgByTitleId/'+value.item.id+'?width='+110+'&height='+110+'" alt=""></a> </td> <td class="cart_description"> <h4><a >'+value.item.name+'</a></h4>  </td> <td class="cart_price"> <p>Rs '+value.item.price+'</p> </td> <td class="cart_quantity"> <div class="cart_quantity_button">  <input class="cart_quantity_input" type="text" disabled name="quantity" value="'+value.quantity+'" autocomplete="off" size="2">  </div> </td> <td class="cart_total"> <p class="cart_total_price">Rs '+value.totalPriceDouble +'</p> </td> <td class="cart_delete"> <a class="cart_quantity_delete" onclick=removeFromCart('+value.id+')><i class="fa fa-times"></i></a> </td> </tr>');
 				 
 			});
 
@@ -355,7 +355,7 @@ function getCartItemsForChk(){
 
 
 
-function removeFromCart(id){
+function removeFromCart(id,cart){
 
 	var ebuy=getCookie('ebuy');
 
@@ -379,7 +379,10 @@ function removeFromCart(id){
         success: function(data, textStatus, jqXHR) {
 
         	alertify.success("Item removed from cart");
-
+        	if(cart)
+	        	setTimeout(function(){window.location.href = 'cart.html'},500);
+	        else
+	        	setTimeout(function(){window.location.href = 'checkout.html'},500);
         },
         error : function(jqXHR, textStatus, errorThrown) {
 	        alertify.error("Error occured during your process please retry");
@@ -428,7 +431,7 @@ function purchase(){
         success: function(data, textStatus, jqXHR) {
 
         	alert("Purchase successfull");
-
+			setTimeout(function(){window.location.href = 'checkout.html'},100);
         },
         error : function(jqXHR, textStatus, errorThrown) {
 	        alertify.error("Error occured during your process please retry");
